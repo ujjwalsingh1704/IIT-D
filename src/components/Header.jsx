@@ -3,7 +3,7 @@ import { Bell, Search, Settings, User, Menu } from 'lucide-react';
 
 export default function Header() {
   return (
-    <header className="bg-gradient-to-r from-white via-slate-50 to-white border-b border-slate-200/60 px-6 py-4 shadow-sm backdrop-blur-sm">
+    <header className="bg-white/70 backdrop-blur-xl border-b border-white/20 px-6 py-4 shadow-lg shadow-slate-900/5 relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/10 before:via-transparent before:to-white/10 before:backdrop-blur-3xl before:-z-10">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <button className="lg:hidden p-2 rounded-xl hover:bg-slate-100 hover:shadow-md transition-all duration-200 transform hover:scale-105">
@@ -29,27 +29,27 @@ export default function Header() {
             <input
               type="text"
               placeholder="Search departments, employees..."
-              className="pl-10 pr-4 py-2.5 w-72 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400 focus:bg-white transition-all duration-200 shadow-sm hover:shadow-md placeholder-slate-400"
+              className="pl-10 pr-4 py-2.5 w-72 bg-white/30  border border-gray/30 rounded-xl focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400/50 focus:bg-white/40 transition-all duration-200 shadow-lg shadow-slate-900/10 hover:shadow-xl hover:bg-gray/40 placeholder-slate-500 hover:ring-gray/40"
             />
           </div>
           
-          <button className="relative p-2.5 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-md group">
+          <button className="relative p-2.5 text-slate-500 hover:text-slate-700 hover:bg-white/30 hover:backdrop-blur-md rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-slate-900/10 group">
             <Bell className="w-5 h-5 group-hover:animate-pulse" />
-            <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs rounded-full flex items-center justify-center shadow-lg shadow-red-500/25 animate-pulse ring-2 ring-white">
+            <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs rounded-full flex items-center justify-center shadow-lg shadow-red-500/25 animate-pulse ring-2 ring-white/80 backdrop-blur-sm">
               3
             </span>
           </button>
           
-          <button className="p-2.5 text-slate-500 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-md group">
+          <button className="p-2.5 text-slate-500 hover:text-slate-700 hover:bg-white/30 hover:backdrop-blur-md rounded-xl transition-all duration-200 transform hover:scale-105 hover:shadow-lg hover:shadow-slate-900/10 group">
             <Settings className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
           </button>
           
-          <div className="flex items-center space-x-3 pl-4 border-l border-slate-200/60">
+          <div className="flex items-center space-x-3 pl-4 border-l border-white/30">
             <div className="relative">
-              <div className="w-10 h-10 bg-gradient-to-br from-slate-400 via-slate-500 to-slate-600 rounded-full flex items-center justify-center shadow-lg shadow-slate-500/25 ring-2 ring-slate-100 hover:ring-slate-200 transition-all duration-200">
+              <div className="w-10 h-10 bg-gradient-to-br from-slate-400 via-slate-500 to-slate-600 rounded-full flex items-center justify-center shadow-lg shadow-slate-500/25 ring-2 ring-white/50 hover:ring-white/70 transition-all duration-200 backdrop-blur-sm">
                 <User className="w-5 h-5 text-white drop-shadow-sm" />
               </div>
-              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white shadow-sm"></div>
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white/80 shadow-sm backdrop-blur-sm"></div>
             </div>
             <div className="hidden md:block">
               <p className="text-sm font-semibold text-slate-800">Sarah Johnson</p>

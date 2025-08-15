@@ -12,16 +12,19 @@ const actions = [
 
 export default function QuickActions() {
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
-      <div className="grid grid-cols-2 gap-3">
+    <div className="bg-gradient-to-br from-white to-slate-50 rounded-xl shadow-lg border border-slate-200/50 p-6 hover:shadow-xl transition-all duration-300">
+      <div className="flex items-center space-x-3 mb-6">
+        <div className="w-2 h-6 bg-gradient-to-b from-indigo-500 to-indigo-600 rounded-full"></div>
+        <h3 className="text-lg font-bold text-slate-800">Quick Actions</h3>
+      </div>
+      <div className="grid grid-cols-2 gap-4">
         {actions.map((action) => (
           <button
             key={action.name}
-            className={`flex items-center space-x-3 p-3 rounded-lg text-white transition-all transform hover:scale-105 ${action.color}`}
+            className={`group flex items-center space-x-3 p-4 rounded-xl text-white transition-all duration-200 transform hover:scale-105 hover:shadow-lg ${action.color} shadow-md`}
           >
-            <action.icon className="w-4 h-4" />
-            <span className="text-sm font-medium">{action.name}</span>
+            <action.icon className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+            <span className="text-sm font-semibold tracking-wide">{action.name}</span>
           </button>
         ))}
       </div>
