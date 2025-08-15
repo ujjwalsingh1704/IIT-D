@@ -1,7 +1,7 @@
 import React from 'react';
 import { Bell, Search, Settings, User, Menu } from 'lucide-react';
 
-export default function Header() {
+export default function Header({ user, onLogout }) {
   return (
     <header className="bg-white/70 backdrop-blur-xl border-b border-white/20 px-6 py-4 shadow-lg shadow-slate-900/5 relative before:absolute before:inset-0 before:bg-gradient-to-r before:from-white/10 before:via-transparent before:to-white/10 before:backdrop-blur-3xl before:-z-10">
       <div className="flex items-center justify-between">
@@ -52,9 +52,17 @@ export default function Header() {
               <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white/80 shadow-sm backdrop-blur-sm"></div>
             </div>
             <div className="hidden md:block">
-              <p className="text-sm font-semibold text-slate-800">Sarah Johnson</p>
-              <p className="text-xs text-slate-500 font-medium">Department Head</p>
+              <p className="text-sm font-semibold text-slate-800">{user?.name || 'Sarah Johnson'}</p>
+              <p className="text-xs text-slate-500 font-medium">{user?.role || 'Department Head'}</p>
             </div>
+            {onLogout && (
+              <button
+                onClick={onLogout}
+                className="ml-3 px-3 py-1 text-xs font-medium text-slate-600 hover:text-slate-800 hover:bg-white/30 hover:backdrop-blur-md rounded-lg transition-all duration-200"
+              >
+                Logout
+              </button>
+            )}
           </div>
         </div>
       </div>
