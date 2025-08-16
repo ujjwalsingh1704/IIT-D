@@ -46,10 +46,10 @@ function App() {
     <Router>
       <div className="min-h-screen bg-gray-50">
         <Sidebar />
-        
+
         <div className="lg:pl-64">
           <Header user={user} onLogout={handleLogout} />
-          
+
           <main>
             <Routes>
               <Route path="/" element={<Dashboard />} />
