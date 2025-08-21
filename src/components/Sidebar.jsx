@@ -1,8 +1,9 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Users, FileText, BarChart3, Calendar, Settings, HelpCircle, Building } from 'lucide-react';
+import { Home, Users, FileText, BarChart3, Calendar, Settings, HelpCircle, Building, FolderOpen, Map, Vote, FileBarChart } from 'lucide-react';
 
-const navigation = [
+// Department Navigation
+const departmentNavigation = [
   { name: 'Dashboard', icon: Home, path: '/' },
   { name: 'Departments', icon: Building, path: '/departments' },
   { name: 'Employees', icon: Users, path: '/employees' },
@@ -11,13 +12,29 @@ const navigation = [
   { name: 'Calendar', icon: Calendar, path: '/calendar' },
 ];
 
+// Citizen Navigation
+const citizenNavigation = [
+  { name: 'Home', icon: Home, path: '/' },
+  { name: 'Projects', icon: FolderOpen, path: '/projects' },
+  { name: 'Map', icon: Map, path: '/map' },
+  { name: 'Polls', icon: Vote, path: '/polls' },
+  { name: 'Reports', icon: FileBarChart, path: '/reports' },
+];
+
 const secondaryNavigation = [
   { name: 'Settings', icon: Settings, path: '/settings' },
   { name: 'Help', icon: HelpCircle, path: '/help' },
 ];
 
-export default function Sidebar() {
+const citizenSecondaryNavigation = [
+  { name: 'Help', icon: HelpCircle, path: '/help' },
+];
+
+export default function Sidebar({ user }) {
   const location = useLocation();
+  
+  const navigation = user?.userType === 'citizen' ? citizenNavigation : departmentNavigation;
+  const secondaryNav = user?.userType === 'citizen' ? citizenSecondaryNavigation : secondaryNavigation;
 
   return (
     <div className="hidden lg:flex lg:flex-col lg:w-64 lg:fixed lg:inset-y-0 lg:bg-gradient-to-b lg:from-slate-900 lg:via-slate-800 lg:to-slate-900 lg:shadow-2xl lg:shadow-slate-900/50">
@@ -30,7 +47,7 @@ export default function Sidebar() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-white">GovConnect</h1>
-              <p className="text-xs text-slate-400">Admin Portal</p>
+              <p className="text-xs text-slate-400">{user?.userType === 'citizen' ? 'Citizen Portal' : 'Admin Portal'}</p>
             </div>
           </div>
         </div>
@@ -63,7 +80,7 @@ export default function Sidebar() {
         
         <div className="px-4 space-y-2">
           <div className="border-t border-slate-700/50 pt-6">
-            {secondaryNavigation.map((item) => (
+            {secondaryNav.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
@@ -90,7 +107,7 @@ export default function Sidebar() {
           <div className="mt-4 text-center">
             <div className="inline-flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-              <span className="text-xs text-slate-400 font-medium">System Online</span>
+              <span className="text-xs text-slate-400 font-medium">{user?.userType === 'citizen' ? 'Citizen Portal' : 'System Online'}</span>
             </div>
           </div>
         </div>

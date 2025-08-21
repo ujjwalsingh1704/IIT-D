@@ -1,12 +1,25 @@
 import React, { useState } from 'react';
-import { Eye, EyeOff, Lock, User, Shield } from 'lucide-react';
+import { Eye, EyeOff, Lock, User, Shield, Building2, Users } from 'lucide-react';
 
 export default function LoginForm({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [userType, setUserType] = useState('citizen'); // 'citizen' or 'department'
+  const [department, setDepartment] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const departments = [
+    { value: '', label: 'Select Department' },
+    { value: 'admin', label: 'Administration' },
+    { value: 'finance', label: 'Finance' },
+    { value: 'hr', label: 'Human Resources' },
+    { value: 'it', label: 'Information Technology' },
+    { value: 'health', label: 'Health Department' },
+    { value: 'education', label: 'Education Department' },
+    { value: 'transport', label: 'Transport Department' }
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -15,10 +28,14 @@ export default function LoginForm({ onLogin }) {
 
     // Simulate authentication delay
     setTimeout(() => {
-      if (username && password) {
-        onLogin(username, password);
+      if (username && password && (userType === 'citizen' || (userType === 'department' && department))) {
+        onLogin(username, password, userType, department);
       } else {
-        setError('Please enter both username and password');
+        if (userType === 'department' && !department) {
+          setError('Please select a department');
+        } else {
+          setError('Please enter both username and password');
+        }
       }
       setIsLoading(false);
     }, 1000);
@@ -54,94 +71,162 @@ export default function LoginForm({ onLogin }) {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
-            {error && (
-              <div className="bg-red-500/20 border border-red-400/30 rounded-xl p-3 backdrop-blur-sm">
-                <p className="text-red-200 text-sm">{error}</p>
-              </div>
-            )}
-
-            {/* Username Field */}
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-white mb-2">
-                Username
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <User className="h-5 w-5 text-blue-200/60" />
+              {error && (
+                <div className="bg-red-500/20 border border-red-400/30 rounded-xl p-3 backdrop-blur-sm">
+                  <p className="text-red-200 text-sm">{error}</p>
                 </div>
-                <input
-                  id="username"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                  className="block w-full pl-10 pr-3 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-blue-200/60 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white/30 transition-all duration-300"
-                  placeholder="Enter your username"
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Password Field */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                Password
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-blue-200/60" />
-                </div>
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full pl-10 pr-12 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-blue-200/60 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white/30 transition-all duration-300"
-                  placeholder="Enter your password"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                >
-                  {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-blue-200/60 hover:text-white transition-colors" />
-                  ) : (
-                    <Eye className="h-5 w-5 text-blue-200/60 hover:text-white transition-colors" />
-                  )}
-                </button>
-              </div>
-            </div>
-
-            {/* Remember Me & Forgot Password */}
-            <div className="flex items-center justify-between">
-              <label className="flex items-center">
-                <input
-                  type="checkbox"
-                  className="h-4 w-4 text-blue-400 focus:ring-blue-400 bg-white/20 border-white/30 rounded backdrop-blur-sm"
-                />
-                <span className="ml-2 text-sm text-blue-200/80">Remember me</span>
-              </label>
-              <a href="#" className="text-sm text-blue-300 hover:text-white font-medium transition-colors">
-                Forgot password?
-              </a>
-            </div>
-
-            {/* Login Button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-600 hover:via-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-400/50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-            >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                  Signing in...
-                </div>
-              ) : (
-                'Sign In'
               )}
-            </button>
+
+              {/* User Type Selection */}
+              <div>
+                <label className="block text-sm font-medium text-white mb-3">
+                  Login as
+                </label>
+                <div className="grid grid-cols-2 gap-3 mb-6">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setUserType('citizen');
+                      setDepartment('');
+                    }}
+                    className={`flex items-center justify-center p-3 rounded-xl border transition-all duration-300 ${
+                      userType === 'citizen'
+                        ? 'bg-blue-500/30 border-blue-400 text-white shadow-lg shadow-blue-500/25'
+                        : 'bg-white/10 border-white/30 text-blue-200/80 hover:bg-white/20'
+                    }`}
+                  >
+                    <Users className="w-5 h-5 mr-2" />
+                    Citizen
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUserType('department')}
+                    className={`flex items-center justify-center p-3 rounded-xl border transition-all duration-300 ${
+                      userType === 'department'
+                        ? 'bg-blue-500/30 border-blue-400 text-white shadow-lg shadow-blue-500/25'
+                        : 'bg-white/10 border-white/30 text-blue-200/80 hover:bg-white/20'
+                    }`}
+                  >
+                    <Building2 className="w-5 h-5 mr-2" />
+                    Department
+                  </button>
+                </div>
+              </div>
+
+              {/* Username Field */}
+              <div>
+                <label htmlFor="username" className="block text-sm font-medium text-white mb-2">
+                  Username
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <User className="h-5 w-5 text-blue-200/60" />
+                  </div>
+                  <input
+                    id="username"
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    className="block w-full pl-10 pr-3 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-blue-200/60 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white/30 transition-all duration-300"
+                    placeholder="Enter your username"
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Department Selection - Only for Department Users */}
+              {userType === 'department' && (
+                <div>
+                  <label htmlFor="department" className="block text-sm font-medium text-white mb-2">
+                    Department
+                  </label>
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                      <Building2 className="h-5 w-5 text-blue-200/60" />
+                    </div>
+                    <select
+                      id="department"
+                      value={department}
+                      onChange={(e) => setDepartment(e.target.value)}
+                      className="block w-full pl-10 pr-3 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white/30 transition-all duration-300 appearance-none"
+                      required
+                    >
+                      {departments.map((dept) => (
+                        <option key={dept.value} value={dept.value} className="bg-slate-800 text-white">
+                          {dept.label}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
+                      <svg className="h-5 w-5 text-blue-200/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Password Field */}
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-blue-200/60" />
+                  </div>
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="block w-full pl-10 pr-12 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-blue-200/60 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white/30 transition-all duration-300"
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-5 w-5 text-blue-200/60 hover:text-white transition-colors" />
+                    ) : (
+                      <Eye className="h-5 w-5 text-blue-200/60 hover:text-white transition-colors" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Remember Me & Forgot Password */}
+              <div className="flex items-center justify-between">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 text-blue-400 focus:ring-blue-400 bg-white/20 border-white/30 rounded backdrop-blur-sm"
+                  />
+                  <span className="ml-2 text-sm text-blue-200/80">Remember me</span>
+                </label>
+                <a href="#" className="text-sm text-blue-300 hover:text-white font-medium transition-colors">
+                  Forgot password?
+                </a>
+              </div>
+
+              {/* Login Button */}
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-600 hover:via-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-400/50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+              >
+                {isLoading ? (
+                  <div className="flex items-center justify-center">
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                    Signing in...
+                  </div>
+                ) : (
+                  'Sign In'
+                )}
+              </button>
             </form>
 
           </div>
