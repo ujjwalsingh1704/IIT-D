@@ -1,25 +1,26 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, User, Shield, Building2, Users } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
+// import { auth } from '../firebase'; // Remove Firebase auth import
+// import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth"; // Remove Firebase auth functions
 
 export default function LoginForm({ onLogin }) {
-  const [username, setUsername] = useState('');
+  const [loginIdentifier, setLoginIdentifier] = useState('');
   const [password, setPassword] = useState('');
-  const [userType, setUserType] = useState('citizen'); // 'citizen' or 'department'
+  const [userType, setUserType] = useState('citizen');
   const [department, setDepartment] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useTranslation();
 
-  const departments = [
-    { value: '', label: 'Select Department' },
-    { value: 'admin', label: 'Administration' },
-    { value: 'finance', label: 'Finance' },
-    { value: 'hr', label: 'Human Resources' },
-    { value: 'it', label: 'Information Technology' },
-    { value: 'health', label: 'Health Department' },
-    { value: 'education', label: 'Education Department' },
-    { value: 'transport', label: 'Transport Department' }
-  ];
+  // Removed OTP related states and functions
+  // const [otp, setOtp] = useState('');
+  // const [confirmationResult, setConfirmationResult] = useState(null);
+  // const [showOtpInput, setShowOtpInput] = useState(false);
+  // const [isSendingOtp, setIsSendingOtp] = useState(false);
+
+  // Removed setupRecaptcha, handleSendOtp, handleVerifyOtp functions
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -28,36 +29,49 @@ export default function LoginForm({ onLogin }) {
 
     // Simulate authentication delay
     setTimeout(() => {
-      if (username && password && (userType === 'citizen' || (userType === 'department' && department))) {
-        onLogin(username, password, userType, department);
+      if (loginIdentifier && password && (userType === 'citizen' || (userType === 'department' && department))) {
+        onLogin(loginIdentifier, password, userType, department);
       } else {
         if (userType === 'department' && !department) {
-          setError('Please select a department');
+          setError(t('selectDepartmentError'));
+        } else if (!loginIdentifier || !password) {
+          setError(t('loginCredentialsError'));
         } else {
-          setError('Please enter both username and password');
+          setError(t('invalidCredentials')); // New translation key needed
         }
       }
       setIsLoading(false);
     }, 1000);
   };
 
+  const departments = [
+    { value: '', label: t('selectDepartment') },
+    { value: 'admin', label: t('administration') },
+    { value: 'finance', label: t('finance') },
+    { value: 'hr', label: t('humanResources') },
+    { value: 'it', label: t('informationTechnology') },
+    { value: 'health', label: t('healthDepartment') },
+    { value: 'education', label: t('educationDepartment') },
+    { value: 'transport', label: t('transportDepartment') }
+  ];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl animate-ping"></div>
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-secondary/20 rounded-full blur-3xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-ping"></div>
       </div>
 
       <div className="w-full max-w-md relative z-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-400 via-blue-500 to-blue-600 rounded-3xl mb-6 shadow-2xl shadow-blue-500/25 ring-4 ring-blue-400/20 backdrop-blur-sm">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-primary to-secondary rounded-3xl mb-6 shadow-2xl shadow-primary/25 ring-4 ring-primary/20 backdrop-blur-sm">
             <Shield className="w-10 h-10 text-white drop-shadow-lg" />
           </div>
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent mb-3">GovConnect</h1>
-          <p className="text-blue-200/80 font-medium text-lg">Department Management System</p>
+          <h1 className="text-4xl font-bold text-text mb-3">GovConnect</h1>
+          <p className="text-lightText font-medium text-lg">{t('departmentManagementSystem')}</p>
         </div>
 
         {/* Login Form */}
@@ -66,8 +80,8 @@ export default function LoginForm({ onLogin }) {
           <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5 rounded-3xl"></div>
           <div className="relative z-10">
             <div className="mb-6">
-              <h2 className="text-2xl font-semibold text-white mb-2">Welcome Back</h2>
-              <p className="text-blue-200/80">Please sign in to your account</p>
+              <h2 className="text-2xl font-semibold text-text mb-2">{t('welcomeBack')}</h2>
+              <p className="text-lightText">{t('signInToAccount')}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -79,8 +93,8 @@ export default function LoginForm({ onLogin }) {
 
               {/* User Type Selection */}
               <div>
-                <label className="block text-sm font-medium text-white mb-3">
-                  Login as
+                <label className="block text-sm font-medium text-text mb-3">
+                  {t('loginAs')}
                 </label>
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   <button
@@ -88,77 +102,86 @@ export default function LoginForm({ onLogin }) {
                     onClick={() => {
                       setUserType('citizen');
                       setDepartment('');
+                      setError('');
+                      setLoginIdentifier('');
+                      setPassword('');
                     }}
                     className={`flex items-center justify-center p-3 rounded-xl border transition-all duration-300 ${
                       userType === 'citizen'
-                        ? 'bg-blue-500/30 border-blue-400 text-white shadow-lg shadow-blue-500/25'
-                        : 'bg-white/10 border-white/30 text-blue-200/80 hover:bg-white/20'
+                        ? 'bg-primary/30 border-primary text-text shadow-lg shadow-primary/25'
+                        : 'bg-background border-lightText/30 text-lightText hover:bg-background/80'
                     }`}
                   >
                     <Users className="w-5 h-5 mr-2" />
-                    Citizen
+                    {t('citizen')}
                   </button>
                   <button
                     type="button"
-                    onClick={() => setUserType('department')}
+                    onClick={() => {
+                      setUserType('department');
+                      setError('');
+                      setLoginIdentifier('');
+                      setPassword('');
+                      setDepartment('');
+                    }}
                     className={`flex items-center justify-center p-3 rounded-xl border transition-all duration-300 ${
                       userType === 'department'
-                        ? 'bg-blue-500/30 border-blue-400 text-white shadow-lg shadow-blue-500/25'
-                        : 'bg-white/10 border-white/30 text-blue-200/80 hover:bg-white/20'
+                        ? 'bg-primary/30 border-primary text-text shadow-lg shadow-primary/25'
+                        : 'bg-background border-lightText/30 text-lightText hover:bg-background/80'
                     }`}
                   >
                     <Building2 className="w-5 h-5 mr-2" />
-                    Department
+                    {t('department')}
                   </button>
                 </div>
               </div>
 
-              {/* Username Field */}
+              {/* Login Identifier Field (ID/Email for Citizen, Username/Email for Department) */}
               <div>
-                <label htmlFor="username" className="block text-sm font-medium text-white mb-2">
-                  Username
+                <label htmlFor="loginIdentifier" className="block text-sm font-medium text-text mb-2">
+                  {userType === 'citizen' ? t('citizenIdEmail') : t('username')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-blue-200/60" />
+                    <User className="h-5 w-5 text-lightText" />
                   </div>
                   <input
-                    id="username"
+                    id="loginIdentifier"
                     type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    className="block w-full pl-10 pr-3 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-blue-200/60 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white/30 transition-all duration-300"
-                    placeholder="Enter your username"
+                    value={loginIdentifier}
+                    onChange={(e) => setLoginIdentifier(e.target.value)}
+                    className="block w-full pl-10 pr-3 py-3 bg-background/50 backdrop-blur-sm border border-lightText/30 rounded-xl text-text placeholder-lightText/80 focus:ring-2 focus:ring-primary focus:border-primary focus:bg-background/70 transition-all duration-300"
+                    placeholder={userType === 'citizen' ? t('enterCitizenIdEmail') : t('enterYourUsername')}
                     required
                   />
                 </div>
               </div>
 
-              {/* Department Selection - Only for Department Users */}
               {userType === 'department' && (
+                // Department Selection - Only for Department Users
                 <div>
-                  <label htmlFor="department" className="block text-sm font-medium text-white mb-2">
-                    Department
+                  <label htmlFor="department" className="block text-sm font-medium text-text mb-2">
+                    {t('department')}
                   </label>
                   <div className="relative">
                     <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                      <Building2 className="h-5 w-5 text-blue-200/60" />
+                      <Building2 className="h-5 w-5 text-lightText" />
                     </div>
                     <select
                       id="department"
                       value={department}
                       onChange={(e) => setDepartment(e.target.value)}
-                      className="block w-full pl-10 pr-3 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white/30 transition-all duration-300 appearance-none"
+                      className="block w-full pl-10 pr-3 py-3 bg-background/50 backdrop-blur-sm border border-lightText/30 rounded-xl text-text focus:ring-2 focus:ring-primary focus:border-primary focus:bg-background/70 transition-all duration-300 appearance-none"
                       required
                     >
                       {departments.map((dept) => (
-                        <option key={dept.value} value={dept.value} className="bg-slate-800 text-white">
+                        <option key={dept.value} value={dept.value} className="bg-gray-800 text-white">
                           {dept.label}
                         </option>
                       ))}
                     </select>
                     <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
-                      <svg className="h-5 w-5 text-blue-200/60" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="h-5 w-5 text-lightText" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                       </svg>
                     </div>
@@ -166,22 +189,22 @@ export default function LoginForm({ onLogin }) {
                 </div>
               )}
 
-              {/* Password Field */}
+              {/* Password Field (for both Citizen and Department) */}
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-white mb-2">
-                  Password
+                <label htmlFor="password" className="block text-sm font-medium text-text mb-2">
+                  {t('password')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-blue-200/60" />
+                    <Lock className="h-5 w-5 text-lightText" />
                   </div>
                   <input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="block w-full pl-10 pr-12 py-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-xl text-white placeholder-blue-200/60 focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white/30 transition-all duration-300"
-                    placeholder="Enter your password"
+                    className="block w-full pl-10 pr-12 py-3 bg-background/50 backdrop-blur-sm border border-lightText/30 rounded-xl text-text placeholder-lightText/80 focus:ring-2 focus:ring-primary focus:border-primary focus:bg-background/70 transition-all duration-300"
+                    placeholder={t('enterYourPassword')}
                     required
                   />
                   <button
@@ -190,9 +213,9 @@ export default function LoginForm({ onLogin }) {
                     className="absolute inset-y-0 right-0 pr-3 flex items-center"
                   >
                     {showPassword ? (
-                      <EyeOff className="h-5 w-5 text-blue-200/60 hover:text-white transition-colors" />
+                      <EyeOff className="h-5 w-5 text-lightText hover:text-text transition-colors" />
                     ) : (
-                      <Eye className="h-5 w-5 text-blue-200/60 hover:text-white transition-colors" />
+                      <Eye className="h-5 w-5 text-lightText hover:text-text transition-colors" />
                     )}
                   </button>
                 </div>
@@ -203,12 +226,12 @@ export default function LoginForm({ onLogin }) {
                 <label className="flex items-center">
                   <input
                     type="checkbox"
-                    className="h-4 w-4 text-blue-400 focus:ring-blue-400 bg-white/20 border-white/30 rounded backdrop-blur-sm"
+                    className="h-4 w-4 text-primary focus:ring-primary bg-background/50 border-lightText/30 rounded backdrop-blur-sm"
                   />
-                  <span className="ml-2 text-sm text-blue-200/80">Remember me</span>
+                  <span className="ml-2 text-sm text-lightText">{t('rememberMe')}</span>
                 </label>
-                <a href="#" className="text-sm text-blue-300 hover:text-white font-medium transition-colors">
-                  Forgot password?
+                <a href="#" className="text-sm text-primary hover:text-text font-medium transition-colors">
+                  {t('forgotPassword')}
                 </a>
               </div>
 
@@ -216,26 +239,26 @@ export default function LoginForm({ onLogin }) {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold hover:from-blue-600 hover:via-blue-700 hover:to-purple-700 focus:ring-4 focus:ring-blue-400/50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                className="w-full bg-gradient-to-r from-primary to-secondary text-white py-3 px-4 rounded-xl font-semibold hover:from-primary/90 hover:to-secondary/90 focus:ring-4 focus:ring-primary/50 transition-all duration-300 transform hover:scale-[1.02] hover:shadow-2xl hover:shadow-primary/25 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {isLoading ? (
                   <div className="flex items-center justify-center">
-                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
-                    Signing in...
+                    <div className="w-5 h-5 border-2 border-text border-t-transparent rounded-full animate-spin mr-2"></div>
+                    {t('signingIn')}
                   </div>
                 ) : (
-                  'Sign In'
+                  t('signIn')
                 )}
               </button>
             </form>
-
+            {/* Removed reCAPTCHA container */}
           </div>
-        </div> */
+        </div>
 
         {/* Footer */}
         <div className="text-center mt-8">
-          <p className="text-sm text-blue-200/60">
-            © 2024 GovConnect. All rights reserved.
+          <p className="text-sm text-lightText">
+            {t('copyright')}
           </p>
         </div>
       </div>
