@@ -8,13 +8,14 @@ import { Users, Building, FileText, TrendingUp } from 'lucide-react';
 export default function Dashboard() {
   return (
     <div className="p-6 bg-gradient-to-br from-slate-50 via-white to-slate-50 min-h-screen">
-      <div className="mb-8">
+      {/* Removed header-like content to avoid duplicate headers. */}
+      {/* <div className="mb-8">
         <div className="flex items-center space-x-3 mb-2">
           <div className="w-1 h-8 bg-gradient-to-b from-blue-500 to-blue-600 rounded-full"></div>
           <h2 className="text-3xl font-bold bg-gradient-to-r from-slate-800 to-slate-600 bg-clip-text text-transparent">Department Dashboard</h2>
         </div>
         <p className="text-slate-600 ml-4 font-medium">Welcome back, Sarah. Here's what's happening in your departments today.</p>
-      </div>
+      </div> */}
       
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
